@@ -7,7 +7,7 @@ public class Location {
 
     @SerializedName("street")
     @Expose
-    private String street;
+    private Street street;
     @SerializedName("city")
     @Expose
     private String city;
@@ -18,11 +18,11 @@ public class Location {
     @Expose
     private String postcode;
 
-    public String getStreet() {
+    public Street getStreet() {
         return street;
     }
 
-    public void setStreet(String street) {
+    public void setStreet(Street street) {
         this.street = street;
     }
 
