@@ -12,5 +12,6 @@ import dagger.Component;
 @Component(modules = {RandomUsersModule.class, PicassoModule.class})
 public interface RandomUserComponent {
     RandomUsersApi getRandomUserService();
+
     Picasso getPicasso();
 }

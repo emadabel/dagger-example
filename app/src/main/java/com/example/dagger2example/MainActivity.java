@@ -1,15 +1,17 @@
 package com.example.dagger2example;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.example.dagger2example.MainActivityFeatures.DaggerMainActivityComponent;
+import com.example.dagger2example.MainActivityFeatures.MainActivityComponent;
+import com.example.dagger2example.MainActivityFeatures.MainActivityModule;
 import com.example.dagger2example.interfaces.RandomUsersApi;
 import com.example.dagger2example.model.RandomUsers;
-import com.example.dagger2example.module.ContextModule;
-import com.squareup.picasso.Picasso;
+
+import javax.inject.Inject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -19,11 +21,11 @@ import timber.log.Timber;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerView mRecyclerView;
+
+    @Inject
     RandomUserAdapter mAdapter;
 
-    Context mContext;
-    Picasso mPicasso;
-
+    @Inject
     RandomUsersApi mRandomUsersApi;
 
     @Override
@@ -34,16 +36,12 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Timber.plant(new Timber.DebugTree());
-
-        mContext = this;
-
-        RandomUserComponent daggerRandomUserComponent = DaggerRandomUserComponent.builder()
-                .contextModule(new ContextModule(this))
+        MainActivityComponent mainActivityComponent = DaggerMainActivityComponent.builder()
+                .mainActivityModule(new MainActivityModule(this))
+                .randomUserComponent(RandomUserApplication.get(this).getRandomUserApplicationComponent())
                 .build();
 
-        mPicasso = daggerRandomUserComponent.getPicasso();
-        mRandomUsersApi = daggerRandomUserComponent.getRandomUserService();
+        mainActivityComponent.injectMainActivity(this);
 
         populateUsers();
     }
@@ -54,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RandomUsers> call, Response<RandomUsers> response) {
                 if (response.isSuccessful()) {
-                    mAdapter = new RandomUserAdapter(mPicasso);
                     mAdapter.setItems(response.body().getResults());
                     mRecyclerView.setAdapter(mAdapter);
                 }
