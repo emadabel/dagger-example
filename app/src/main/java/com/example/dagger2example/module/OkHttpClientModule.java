@@ -13,7 +13,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import timber.log.Timber;
 
-@Module
+@Module(includes = ContextModule.class)
 public class OkHttpClientModule {
 
     @Provides
