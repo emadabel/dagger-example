@@ -8,9 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import com.example.dagger2example.model.RandomUsers;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.squareup.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -26,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView mRecyclerView;
     RandomUserAdapter mAdapter;
 
+    Picasso mPicasso;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
 
         Timber.plant(new Timber.DebugTree());
 
+        File cacheFile = new File(this.getCacheDir(), "HttpCache");
+        cacheFile.mkdirs();
+
+        Cache cache = new Cache(cacheFile, 10*1000*1000);
+
         HttpLoggingInterceptor httpLoggingInterceptor = new
                 HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
@@ -51,8 +63,13 @@ public class MainActivity extends AppCompatActivity {
 
         OkHttpClient okHttpClient = new OkHttpClient()
                 .newBuilder()
+                .cache(cache)
                 .addInterceptor(httpLoggingInterceptor)
                 .build();
+
+        OkHttp3Downloader okHttpDownloader = new OkHttp3Downloader(okHttpClient);
+
+        mPicasso = new Picasso.Builder(this).downloader(okHttpDownloader).build();
 
         mRetrofit = new Retrofit.Builder()
                 .client(okHttpClient)
@@ -69,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RandomUsers> call, Response<RandomUsers> response) {
                 if (response.isSuccessful()) {
-                    mAdapter = new RandomUserAdapter();
+                    mAdapter = new RandomUserAdapter(mPicasso);
                     mAdapter.setItems(response.body().getResults());
                     mRecyclerView.setAdapter(mAdapter);
                 }
