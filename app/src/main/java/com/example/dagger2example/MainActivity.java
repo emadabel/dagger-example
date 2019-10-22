@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.example.dagger2example.interfaces.RandomUsersApi;
 import com.example.dagger2example.model.RandomUsers;
 import com.example.dagger2example.module.ContextModule;
 import com.squareup.picasso.Picasso;

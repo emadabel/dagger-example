@@ -1,4 +1,4 @@
-package com.example.dagger2example;
+package com.example.dagger2example.interfaces;
 
 import com.example.dagger2example.model.RandomUsers;
 

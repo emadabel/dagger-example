@@ -2,6 +2,8 @@ package com.example.dagger2example.module;
 
 import android.content.Context;
 
+import com.example.dagger2example.interfaces.ApplicationContext;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -31,7 +33,7 @@ public class OkHttpClientModule {
     }
 
     @Provides
-    public File file(Context context) {
+    public File file(@ApplicationContext Context context) {
         File file = new File(context.getCacheDir(), "HttpCache");
         file.mkdirs();
         return file;

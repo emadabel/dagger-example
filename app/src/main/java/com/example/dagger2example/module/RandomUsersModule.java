@@ -1,6 +1,7 @@
 package com.example.dagger2example.module;
 
-import com.example.dagger2example.RandomUsersApi;
+import com.example.dagger2example.interfaces.RandomUserApplicationScope;
+import com.example.dagger2example.interfaces.RandomUsersApi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -18,6 +19,7 @@ public class RandomUsersModule {
         return retrofit.create(RandomUsersApi.class);
     }
 
+    @RandomUserApplicationScope
     @Provides
     public Retrofit retrofit(OkHttpClient okHttpClient,
                              GsonConverterFactory gsonConverterFactory) {

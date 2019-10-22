@@ -2,25 +2,26 @@ package com.example.dagger2example.module;
 
 import android.content.Context;
 
-import com.example.dagger2example.interfaces.ApplicationContext;
 import com.example.dagger2example.interfaces.RandomUserApplicationScope;
+
+import javax.inject.Named;
 
 import dagger.Module;
 import dagger.Provides;
 
 @Module
-public class ContextModule {
+public class ActivityModule {
 
-    private Context mContext;
+    private final Context mContext;
 
-    public ContextModule(Context context) {
+    public ActivityModule(Context context) {
         mContext = context;
     }
 
-    @ApplicationContext
+    @Named("activity_context")
     @RandomUserApplicationScope
     @Provides
     public Context context() {
-        return mContext.getApplicationContext();
+        return mContext;
     }
 }
